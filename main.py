@@ -18,11 +18,12 @@ HTTP_PROXY = os.getenv('FIXIE_URL')
 def callback():
     print request.headers
     if request.headers.get('Content-Type') != 'application/json' \
-            or 'X-LINE-ChannelSignature' in request.headers:
+            or 'X-LINE-ChannelSignature' not in request.headers:
         abort(403)
 
     post_data = request.get_json()
-    print json.dumps(json.loads(post_data), indent=4, sort_keys=True)
+    # debug
+    print json.dumps(post_data, indent=4, sort_keys=True)
     for d in post_data.get('result'):
         to = [d['content']['from']]
         to_channel = '1383378250'
