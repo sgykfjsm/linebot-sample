@@ -10,8 +10,7 @@ CHANNEL_ID = os.getenv('CHANNEL_ID')
 # CHANNEL_ACCESS_TOKEN = os.getenv('CHANNEL_ACCESS_TOKEN')
 CHANNEL_SECRET = os.getenv('CHANNEL_SECRET')
 CHANNEL_MID = os.getenv('CHANNEL_MID')
-HTTP_PROXY = os.getenv('FIXIE_URL')
-# HTTPS_PROXY = os.getenv('HTTPS_PROXY')
+HTTPS_PROXY = os.getenv('FIXIE_URL')
 
 
 @app.route('/linebot/callback', methods=['POST'])
@@ -44,7 +43,7 @@ def callback():
             'content': content
             })
 
-        proxy = {"http": HTTP_PROXY}
+        proxy = {"https": HTTPS_PROXY}
         res = requests.post(endpoint, data=data, headers=headers, proxies=proxy)
 
         if res.status_code != 200:
