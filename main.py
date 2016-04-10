@@ -6,10 +6,12 @@ import requests
 
 app = Flask('__main__')
 
+CHANNEL_ID = os.getenv('CHANNEL_ID')
+# CHANNEL_ACCESS_TOKEN = os.getenv('CHANNEL_ACCESS_TOKEN')
 CHANNEL_SECRET = os.getenv('CHANNEL_SECRET')
-CHANNEL_ACCESS_TOKEN = os.getenv('CHANNEL_ACCESS_TOKEN')
-HTTP_PROXY = os.getenv('HTTP_PROXY')
-HTTPS_PROXY = os.getenv('HTTPS_PROXY')
+CHANNEL_MID = os.getenv('CHANNEL_MID')
+HTTP_PROXY = os.getenv('FIXIE_URL')
+# HTTPS_PROXY = os.getenv('HTTPS_PROXY')
 
 
 @app.route('/linebot/callback', methods=['POST'])
@@ -27,7 +29,12 @@ def callback():
         event_type = "138311608800106203"
         content = d['content']
         endpoint = 'https://trialbot-api.line.me/v1/events'
-        headers = {'Content-Type': 'application/json; charset=UTF-8', 'X-Line-ChannelToken': CHANNEL_ACCESS_TOKEN}
+        headers = {
+                'Content-Type': 'application/json; charset=UTF-8',
+                'X-Line-ChannelID': CHANNEL_ID,
+                'X-Line-ChannelSecret': CHANNEL_SECRET,
+                'X-Line-Trusted-User-With-ACL': CHANNEL_MID,
+                }
 
         data = json.dumps({
             'to': to,
@@ -36,7 +43,7 @@ def callback():
             'content': content
             })
 
-        proxy = {"http": HTTP_PROXY, "https": HTTPS_PROXY}
+        proxy = {"http": HTTP_PROXY}
         res = requests.post(endpoint, data=data, headers=headers, proxies=proxy)
 
         if res.status_code != 200:
